@@ -1,10 +1,23 @@
 PODS:
-  - SocketRocket (0.3.1-beta2)
+  - OpenSSL-Universal (1.0.1.l)
+  - SocketRocket (0.2.0)
+  - themis (0.9.1):
+    - OpenSSL-Universal (~> 1.0.1l)
+    - themis/objcthemis (= 0.9.1)
+    - themis/themis (= 0.9.1)
+  - themis/objcthemis (0.9.1):
+    - OpenSSL-Universal (~> 1.0.1l)
+    - themis/themis
+  - themis/themis (0.9.1):
+    - OpenSSL-Universal (~> 1.0.1l)
 
 DEPENDENCIES:
   - SocketRocket
+  - themis
 
 SPEC CHECKSUMS:
-  SocketRocket: 7ac946bcce46287a791dfff3c1f8daa692821dae
+  OpenSSL-Universal: eeb215fff0c6b65b6ba8f4262ef52d3baf2df2d7
+  SocketRocket: 54a4ac2f354c4e8c51ef5dcd4a13bc556d4f2b7c
+  themis: 5241b5eb89f33bd3ea773d894dca3990c5368d5e
 
-COCOAPODS: 0.29.0
+COCOAPODS: 0.37.2
