@@ -19,6 +19,7 @@ size_t server_key_length=45;
     NSString *id = [[NSString alloc] initWithData:binaryId encoding: NSUTF8StringEncoding];
     if([id isEqualToString: @"server"]){
         NSData* key = [[NSData alloc] initWithBytes:server_key  length:server_key_length];
+        return key;
     }
     return NULL;
 }
@@ -92,8 +93,15 @@ size_t server_key_length=45;
     NSLog(@"EC public key:%@", publicKey);
 
   [webSocket send:[NSString stringWithFormat:@"%@:%@", [UIDevice currentDevice].name, [publicKey base64EncodedStringWithOptions:0]]];
-    transport = [Transport alloc];
+    transport = [[Transport alloc] init];
     session = [[TSSession alloc] initWithUserId:[[UIDevice currentDevice].name dataUsingEncoding:NSUTF8StringEncoding] privateKey:privateKey callbacks:transport];
+    NSError *error=NULL;
+    NSData *data_to_send=[session connectRequest:&error];
+    if(error){
+        NSLog(@"%@", error);
+        return;
+    }
+    [webSocket send:[NSString stringWithFormat:@"%@", [data_to_send base64EncodedStringWithOptions:0]]];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
@@ -105,11 +113,23 @@ size_t server_key_length=45;
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-  self.messagesTextView.text = [NSString stringWithFormat:@"%@\n%@", self.messagesTextView.text, message];
+    NSError *error=NULL;
+    NSData* umessage=[session unwrapData:[[NSData alloc] initWithBase64EncodedString:message options:1] error:&error];
+    if ([error code]<0) { //must be corrected to "error" with new objthemis
+        NSLog(@"%@", error);
+        return;
+    }
+    if (![session isSessionEstablished]) {
+        [webSocket send:[NSString stringWithFormat:@"%@", [umessage base64EncodedStringWithOptions:0]]];
+        return;
+    }
+    if([umessage length]==0)return;
+    self.messagesTextView.text = [NSString stringWithFormat:@"%@\n%@", self.messagesTextView.text, [[NSString alloc] initWithData:umessage encoding:NSUTF8StringEncoding]];
 }
 
 - (IBAction)sendMessage:(id)sender {
-  [webSocket send:self.messageTextField.text];
+    NSError *error;
+    [webSocket send:[[session wrapData: [self.messageTextField.text dataUsingEncoding:NSUTF8StringEncoding] error:&error] base64EncodedStringWithOptions:0]];
   self.messageTextField.text = nil;
 }
 
