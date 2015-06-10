@@ -11,16 +11,15 @@
 #import "objcthemis/skeygen.h"
 
 
-char server_key[] = "\x55\x45\x43\x32\x00\x00\x00\x2d\x75\x58\x33\xd4\x02\x12\xdf\x1f\xe9\xea\x48\x11\xe1\xf9\x71\x8e\x24\x11\xcb\xfd\xc0\xa3\x6e\xd6\xac\x88\xb6\x44\xc2\x9a\x24\x84\xee\x50\x4c\x3e\xa0";
-size_t server_key_length = 45;
+NSString * const kServerKey = @"VUVDMgAAAC11WDPUAhLfH+nqSBHh+XGOJBHL/cCjbtasiLZEwpokhO5QTD6g";
 
 
 @implementation Transport
 
 - (NSData *)publicKeyFor:(NSData *)binaryId error:(NSError **)error {
-    NSString * id = [[NSString alloc] initWithData:binaryId encoding:NSUTF8StringEncoding];
-    if ([id isEqualToString:@"server"]) {
-        NSData * key = [[NSData alloc] initWithBytes:server_key length:server_key_length];
+    NSString * stringFromData = [[NSString alloc] initWithData:binaryId encoding:NSUTF8StringEncoding];
+    if ([stringFromData isEqualToString:@"server"]) {
+        NSData * key = [[NSData alloc] initWithBase64EncodedString:kServerKey options:NSDataBase64DecodingIgnoreUnknownCharacters];
         return key;
     }
     return nil;
@@ -76,15 +75,16 @@ size_t server_key_length = 45;
     // send public key in format
     // name : publicKey
 
-    NSString * handshakeMessage = [NSString stringWithFormat:@"%@:%@", [UIDevice currentDevice].name, [publicKey base64EncodedStringWithOptions:0]];
+    NSString * name = [UIDevice currentDevice].name;
+    NSString * handshakeMessage = [NSString stringWithFormat:@"%@:%@", name, [publicKey base64EncodedStringWithOptions:0]];
     [self loggingEvent:@"sending handshakeMessage"];
     NSLog(@"sending handshakeMessage %@", handshakeMessage);
     [self.webSocket send:handshakeMessage];
 
 
-    // connect request
+    // send establishment message
     self.transport = [Transport new];
-    self.session = [[TSSession alloc] initWithUserId:[[UIDevice currentDevice].name dataUsingEncoding:NSUTF8StringEncoding]
+    self.session = [[TSSession alloc] initWithUserId:[name dataUsingEncoding:NSUTF8StringEncoding]
                                           privateKey:privateKey
                                            callbacks:self.transport];
     NSError * error = nil;
