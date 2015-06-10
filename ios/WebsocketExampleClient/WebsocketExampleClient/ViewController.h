@@ -15,18 +15,16 @@
 
 @end
 
-@interface ViewController : UIViewController <SRWebSocketDelegate, UITextFieldDelegate>{
-    Transport* transport;
-    TSSession* session;
-}
+@interface ViewController : UIViewController <SRWebSocketDelegate, UITextFieldDelegate>
+
 
 @property (weak, nonatomic) IBOutlet UITextView *messagesTextView;
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet UITextField *messageTextField;
 
-
-
 - (IBAction)sendMessage:(id)sender;
+
+- (IBAction)reconnect:(id)sender;
 
 @end
