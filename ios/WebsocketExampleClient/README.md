@@ -11,4 +11,4 @@ Be brave, open server folder and follow steps in [ReadMe](https://github.com/cos
 5. Enter anything into textfield, and press send button.
 6. Enjoy!
 
-![Funny screenshot here](/pic/socket-example.png)
+![Funny screenshot here](pic/socket-example.png)
