@@ -150,8 +150,8 @@ NSString * const kServerKey = @"VUVDMgAAAC11WDPUAhLfH+nqSBHh+XGOJBHL/cCjbtasiLZE
     // re-send message?
     if (![self.session isSessionEstablished] && unwrappedMessage) {
         NSString * unwrappedStringMessage = [unwrappedMessage base64EncodedStringWithOptions:0];
-        [self loggingEvent:@"sending establishing message"];
-        NSLog(@"sending establishing message %@", unwrappedStringMessage);
+        [self loggingEvent:@"responding on establishing message"];
+        NSLog(@"responding establishing message %@", unwrappedStringMessage);
         [webSocket send:unwrappedStringMessage];
         return;
     }

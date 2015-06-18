@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   themis:
-    :commit: 3fc7e881c8e8e9c1c73fda23a26fac616bc0927b
+    :commit: 38ca47335e76093799b53be10296a2ada515765c
     :git: https://github.com/cossacklabs/themis.git
 
 SPEC CHECKSUMS:
