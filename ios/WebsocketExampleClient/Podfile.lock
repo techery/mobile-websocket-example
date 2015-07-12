@@ -1,6 +1,6 @@
 PODS:
   - OpenSSL-Universal (1.0.1.l)
-  - SocketRocket (0.2.0)
+  - SocketRocket (0.4)
   - themis (0.9.1):
     - OpenSSL-Universal (~> 1.0.1l)
     - themis/core (= 0.9.1)
@@ -21,12 +21,12 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   themis:
-    :commit: 38ca47335e76093799b53be10296a2ada515765c
+    :commit: a5968fcbb0353046cb155787762472bcbaba4118
     :git: https://github.com/cossacklabs/themis.git
 
 SPEC CHECKSUMS:
   OpenSSL-Universal: eeb215fff0c6b65b6ba8f4262ef52d3baf2df2d7
-  SocketRocket: 54a4ac2f354c4e8c51ef5dcd4a13bc556d4f2b7c
+  SocketRocket: 01443933b7bc362621325f4607b80b4286a99707
   themis: 54822b4996a116fa1d81dc8a2ab02c5e60a3b3cd
 
 COCOAPODS: 0.37.2

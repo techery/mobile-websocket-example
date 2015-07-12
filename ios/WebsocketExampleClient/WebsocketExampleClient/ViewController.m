@@ -2,16 +2,15 @@
 //  ViewController.m
 //  WebsocketExampleClient
 //
-//  Created by Elabs Developer on 2/10/14.
-//  Copyright (c) 2014 Elabs. All rights reserved.
 //
 
+#import <themis/objcthemis/scell_seal.h>
+#import <themis/objcthemis/skeygen.h>
 #import "ViewController.h"
-#import "objcthemis/ssession.h"
-#import "objcthemis/skeygen.h"
 
 
 NSString * const kServerKey = @"VUVDMgAAAC11WDPUAhLfH+nqSBHh+XGOJBHL/cCjbtasiLZEwpokhO5QTD6g";
+NSString * const kHistoryStoringKey = @"kHistoryStoringKey";
 
 
 @implementation Transport
@@ -34,6 +33,7 @@ NSString * const kServerKey = @"VUVDMgAAAC11WDPUAhLfH+nqSBHh+XGOJBHL/cCjbtasiLZE
 
 @property (nonatomic, strong) Transport * transport;
 @property (nonatomic, strong) TSSession * session;
+@property (nonatomic, strong) TSCellSeal * secureStorageEnryptor;
 @end
 
 
@@ -41,6 +41,8 @@ NSString * const kServerKey = @"VUVDMgAAAC11WDPUAhLfH+nqSBHh+XGOJBHL/cCjbtasiLZE
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    [self readHistory];
     [self connectWebSocket];
 }
 
@@ -207,8 +209,77 @@ NSString * const kServerKey = @"VUVDMgAAAC11WDPUAhLfH+nqSBHh+XGOJBHL/cCjbtasiLZE
     // scroll to bottom
     NSRange bottom = NSMakeRange(self.messagesTextView.text.length - 1, 1);
     [self.messagesTextView scrollRangeToVisible:bottom];
+
+    // saving to storage
+    [self saveHistory:string];
 }
 
+
+- (void)saveHistory:(NSString *)string {
+    // create encryptor if there's no
+    [self createSecureStorage];
+
+    // encrypt event
+    NSError * error = nil;
+    NSString * message = [NSString stringWithFormat:@"%@ %@", [NSDate date], string];
+    NSData * encryptedEvent = [self.secureStorageEnryptor wrapData:[message dataUsingEncoding:NSUTF8StringEncoding]
+                                                           context:nil
+                                                             error:&error];
+    if (!encryptedEvent || error) {
+        NSLog(@"Error on encrypting message %@", error);
+        return;
+    }
+
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+
+    // check if history is already presented
+    NSMutableArray * history = [[userDefaults valueForKey:kHistoryStoringKey] mutableCopy];
+    if (!history) {
+        history = [NSMutableArray new];
+    }
+
+    // add encrypted object to history
+    [history addObject:encryptedEvent];
+
+    // add history to storage
+    [userDefaults setObject:history forKey:kHistoryStoringKey];
+}
+
+
+- (void)readHistory {
+    NSLog(@"Previous message history on this client...");
+    [self createSecureStorage];
+
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray * history = [userDefaults valueForKey:kHistoryStoringKey];
+
+    [history enumerateObjectsUsingBlock:^(NSData * encryptedData, NSUInteger idx, BOOL * stop) {
+        NSError * error = nil;
+        NSData * decryptedMessage = [self.secureStorageEnryptor unwrapData:encryptedData
+                                                 context:nil
+                                                   error:&error];
+
+        if (error) {
+            NSLog(@"Error on decrypting message %@", error);
+        } else {
+            NSString * resultString = [[NSString alloc] initWithData:decryptedMessage
+                                                            encoding:NSUTF8StringEncoding];
+            NSLog(@"Message decrypted:\n-- %@", resultString);
+        }
+    }];
+    NSLog(@"End of history\n\n");
+}
+
+
+- (void)createSecureStorage {
+    // create encryptor if there's no
+    if (!self.secureStorageEnryptor) {
+
+        // you should NEVER use uuid as encryption key ;)
+        NSString * encryptionKey = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        self.secureStorageEnryptor = [[TSCellSeal alloc] initWithKey:[encryptionKey dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+}
 
 #pragma mark - UITextField delegate
 
