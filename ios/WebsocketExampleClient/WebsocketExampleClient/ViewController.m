@@ -2,143 +2,290 @@
 //  ViewController.m
 //  WebsocketExampleClient
 //
-//  Created by Elabs Developer on 2/10/14.
-//  Copyright (c) 2014 Elabs. All rights reserved.
 //
 
+#import <themis/objcthemis/scell_seal.h>
+#import <themis/objcthemis/skeygen.h>
 #import "ViewController.h"
-#import "objcthemis/ssession.h"
-#import "objcthemis/skeygen.h"
 
-char server_key[]="\x55\x45\x43\x32\x00\x00\x00\x2d\x75\x58\x33\xd4\x02\x12\xdf\x1f\xe9\xea\x48\x11\xe1\xf9\x71\x8e\x24\x11\xcb\xfd\xc0\xa3\x6e\xd6\xac\x88\xb6\x44\xc2\x9a\x24\x84\xee\x50\x4c\x3e\xa0";
-size_t server_key_length=45;
+
+NSString * const kServerKey = @"VUVDMgAAAC11WDPUAhLfH+nqSBHh+XGOJBHL/cCjbtasiLZEwpokhO5QTD6g";
+NSString * const kHistoryStoringKey = @"kHistoryStoringKey";
+
 
 @implementation Transport
 
-- (NSData *)publicKeyFor:(NSData *)binaryId error:(NSError **)error{
-    NSString *id = [[NSString alloc] initWithData:binaryId encoding: NSUTF8StringEncoding];
-    if([id isEqualToString: @"server"]){
-        NSData* key = [[NSData alloc] initWithBytes:server_key  length:server_key_length];
+- (NSData *)publicKeyFor:(NSData *)binaryId error:(NSError **)error {
+    NSString * stringFromData = [[NSString alloc] initWithData:binaryId encoding:NSUTF8StringEncoding];
+    if ([stringFromData isEqualToString:@"server"]) {
+        NSData * key = [[NSData alloc] initWithBase64EncodedString:kServerKey options:NSDataBase64DecodingIgnoreUnknownCharacters];
         return key;
     }
-    return NULL;
+    return nil;
 }
 
 @end
 
-@implementation ViewController {
-  SRWebSocket *webSocket;
-}
+
+@interface ViewController ()
+
+@property (nonatomic, strong) SRWebSocket * webSocket;
+
+@property (nonatomic, strong) Transport * transport;
+@property (nonatomic, strong) TSSession * session;
+@property (nonatomic, strong) TSCellSeal * secureStorageEnryptor;
+@end
+
+
+@implementation ViewController
 
 - (void)viewDidLoad {
-  [super viewDidLoad];
-  [self connectWebSocket];
+    [super viewDidLoad];
 
-  UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
-  [self.messagesTextView addGestureRecognizer:tgr];
-
-  [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillChangeFrameNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-    CGRect endFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    UIViewAnimationCurve curve = [note.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
-    CGFloat duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
-
-    UIViewAnimationOptions options = curve << 16;
-
-    [UIView animateWithDuration:duration delay:0.0 options:options animations:^{
-      CGRect frame = self.containerView.frame;
-      frame.origin.y = CGRectGetMinY(endFrame) - CGRectGetHeight(self.containerView.frame);
-      self.containerView.frame = frame;
-
-      frame = self.messagesTextView.frame;
-      frame.size.height = CGRectGetMinY(self.containerView.frame) - CGRectGetMinY(frame);
-      self.messagesTextView.frame = frame;
-    } completion:nil];
-  }];
-}
-
-- (void)hideKeyboard {
-  [self.view endEditing:YES];
+    [self readHistory];
+    [self connectWebSocket];
 }
 
 
 #pragma mark - Connection
 
 - (void)connectWebSocket {
-  webSocket.delegate = nil;
-  webSocket = nil;
+    [self loggingEvent:@"connecting..."];
+    NSString * urlString = @"ws://127.0.0.1:8080";
+    self.webSocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:urlString]];
+    self.webSocket.delegate = self;
 
-  NSString *urlString = @"ws://192.168.43.213:8080";
-  SRWebSocket *newWebSocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:urlString]];
-  newWebSocket.delegate = self;
+    [self.webSocket open];
+}
 
-  [newWebSocket open];
+
+#pragma mark - Themis
+
+- (void)initializeSession {
+    // generate keys
+    
+    TSKeyGen * keygenEC = [[TSKeyGen alloc] initWithAlgorithm:TSKeyGenAsymmetricAlgorithmEC];
+    if (!keygenEC) {
+        [self loggingEvent:@"Error while initializing keygen"];
+        NSLog(@"%s Error occured while initializing object keygenEC", sel_getName(_cmd));
+        return;
+    }
+
+    NSData * privateKey = keygenEC.privateKey;
+    NSData * publicKey = keygenEC.publicKey;
+
+    // send public key in format
+    // name : publicKey
+
+    NSString * name = [UIDevice currentDevice].name;
+    NSString * handshakeMessage = [NSString stringWithFormat:@"%@:%@", name, [publicKey base64EncodedStringWithOptions:0]];
+    [self loggingEvent:@"sending handshakeMessage"];
+    NSLog(@"sending handshakeMessage %@", handshakeMessage);
+    [self.webSocket send:handshakeMessage];
+
+
+    // send establishment message
+    self.transport = [Transport new];
+    self.session = [[TSSession alloc] initWithUserId:[name dataUsingEncoding:NSUTF8StringEncoding]
+                                          privateKey:privateKey
+                                           callbacks:self.transport];
+    NSError * error = nil;
+    NSData * sessionEstablishingData = [self.session connectRequest:&error];
+    if (error) {
+        [self loggingEvent:[NSString stringWithFormat:@"Error while handshake %@", error]];
+        return;
+    }
+
+    NSString * sessionEstablishingString = [sessionEstablishingData base64EncodedStringWithOptions:0];
+    [self loggingEvent:@"sending establishing message"];
+    NSLog(@"sending establishing message %@", sessionEstablishingString);
+    [self.webSocket send:sessionEstablishingString];
 }
 
 
 #pragma mark - SRWebSocket delegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)newWebSocket {
-    webSocket = newWebSocket;
-    TSKeyGen * keygenEC = [[TSKeyGen alloc] initWithAlgorithm:TSKeyGenAsymmetricAlgorithmEC];
-    
-    if (!keygenEC) {
-        NSLog(@"%s Error occured while initializing object keygenEC", sel_getName(_cmd));
-        return;
-    }
-    
-    NSData *privateKey = keygenEC.privateKey;
-    NSLog(@"EC private key: %@", privateKey);
-    
-    NSData *publicKey = keygenEC.publicKey;
-    NSLog(@"EC public key:%@", publicKey);
-
-  [webSocket send:[NSString stringWithFormat:@"%@:%@", [UIDevice currentDevice].name, [publicKey base64EncodedStringWithOptions:0]]];
-    transport = [[Transport alloc] init];
-    session = [[TSSession alloc] initWithUserId:[[UIDevice currentDevice].name dataUsingEncoding:NSUTF8StringEncoding] privateKey:privateKey callbacks:transport];
-    NSError *error=NULL;
-    NSData *data_to_send=[session connectRequest:&error];
-    if(error){
-        NSLog(@"%@", error);
-        return;
-    }
-    [webSocket send:[NSString stringWithFormat:@"%@", [data_to_send base64EncodedStringWithOptions:0]]];
+    NSLog(@"%s", sel_getName(_cmd));
+    [self initializeSession];
 }
+
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-  [self connectWebSocket];
+    NSLog(@"%s", sel_getName(_cmd));
+
+    if (error.code == 61) {
+        [self loggingEvent:[NSString stringWithFormat:@"Error %@", error]];
+        NSLog(@"Error %@", error);
+        NSLog(@"Please, start ruby server, using guide https://github.com/cossacklabs/mobile-websocket-example/tree/master/server");
+        return;
+    }
+    
+    // reconnect
+    [self connectWebSocket];
 }
+
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-  [self connectWebSocket];
+    NSLog(@"%s", sel_getName(_cmd));
+
+    // reconnect
+    //[self connectWebSocket];
 }
+
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-    NSError *error=NULL;
-    NSData* umessage=[session unwrapData:[[NSData alloc] initWithBase64EncodedString:message options:1] error:&error];
-    if ([error code]<0) { //must be corrected to "error" with new objthemis
-        NSLog(@"%@", error);
+    NSLog(@"%s", sel_getName(_cmd));
+    [self loggingEvent:@"response received"];
+
+    NSError * error = nil;
+
+    NSData * receivedData = [[NSData alloc] initWithBase64EncodedString:message options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData * unwrappedMessage = [self.session unwrapData:receivedData error:&error];
+
+    if (error) {
+        [self loggingEvent:[NSString stringWithFormat:@"Error on unwrapping message %@", error]];
+        NSLog(@"Error on unwrapping message %@", error);
         return;
     }
-    if (![session isSessionEstablished]) {
-        [webSocket send:[NSString stringWithFormat:@"%@", [umessage base64EncodedStringWithOptions:0]]];
+
+    // re-send message?
+    if (![self.session isSessionEstablished] && unwrappedMessage) {
+        NSString * unwrappedStringMessage = [unwrappedMessage base64EncodedStringWithOptions:0];
+        [self loggingEvent:@"responding on establishing message"];
+        NSLog(@"responding establishing message %@", unwrappedStringMessage);
+        [webSocket send:unwrappedStringMessage];
         return;
     }
-    if([umessage length]==0)return;
-    self.messagesTextView.text = [NSString stringWithFormat:@"%@\n%@", self.messagesTextView.text, [[NSString alloc] initWithData:umessage encoding:NSUTF8StringEncoding]];
+
+    NSString * unwrappedString = [[NSString alloc] initWithData:unwrappedMessage encoding:NSUTF8StringEncoding];
+    [self loggingEvent:unwrappedString];
 }
+
+
+#pragma mark - actions
 
 - (IBAction)sendMessage:(id)sender {
-    NSError *error;
-    [webSocket send:[[session wrapData: [self.messageTextField.text dataUsingEncoding:NSUTF8StringEncoding] error:&error] base64EncodedStringWithOptions:0]];
-  self.messageTextField.text = nil;
+    NSLog(@"%s", sel_getName(_cmd));
+    NSData * dataToSend = [self.messageTextField.text dataUsingEncoding:NSUTF8StringEncoding];
+
+    if (!dataToSend) {
+        // no message, no sending
+        NSLog(@"there is nothing to send, cancelling");
+        return;
+    }
+    
+    if (!self.webSocket) {
+        NSLog(@"socket is not connected");
+        [self loggingEvent:@"socket is not connected"];
+        return;
+    }
+
+    // wrap data
+    NSError * error;
+    NSData * wrappedData = [self.session wrapData:dataToSend error:&error];
+
+    if (!wrappedData || error) {
+        [self loggingEvent:[NSString stringWithFormat:@"Error on wrapping message %@", error]];
+        NSLog(@"Error on wrapping message %@", error);
+        return;
+    }
+
+    NSString * wrappedStringMessage = [wrappedData base64EncodedStringWithOptions:0];
+    [self loggingEvent:@"sending message..."];
+    [self.webSocket send:wrappedStringMessage];
 }
 
+
+- (IBAction)reconnect:(id)sender {
+    [self loggingEvent:@"reconnecting..."];
+    [self connectWebSocket];
+}
+
+
+- (void)loggingEvent:(NSString * )string {
+    self.messagesTextView.text = [NSString stringWithFormat:@"%@\n* %@", self.messagesTextView.text, string];
+
+    // scroll to bottom
+    NSRange bottom = NSMakeRange(self.messagesTextView.text.length - 1, 1);
+    [self.messagesTextView scrollRangeToVisible:bottom];
+
+    // saving to storage
+    [self saveHistory:string];
+}
+
+
+- (void)saveHistory:(NSString *)string {
+    // create encryptor if there's no
+    [self createSecureStorage];
+
+    // encrypt event
+    NSError * error = nil;
+    NSString * message = [NSString stringWithFormat:@"%@ %@", [NSDate date], string];
+    NSData * encryptedEvent = [self.secureStorageEnryptor wrapData:[message dataUsingEncoding:NSUTF8StringEncoding]
+                                                           context:nil
+                                                             error:&error];
+    if (!encryptedEvent || error) {
+        NSLog(@"Error on encrypting message %@", error);
+        return;
+    }
+
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+
+    // check if history is already presented
+    NSMutableArray * history = [[userDefaults valueForKey:kHistoryStoringKey] mutableCopy];
+    if (!history) {
+        history = [NSMutableArray new];
+    }
+
+    // add encrypted object to history
+    [history addObject:encryptedEvent];
+
+    // add history to storage
+    [userDefaults setObject:history forKey:kHistoryStoringKey];
+}
+
+
+- (void)readHistory {
+    NSLog(@"Previous message history on this client...");
+    [self createSecureStorage];
+
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray * history = [userDefaults valueForKey:kHistoryStoringKey];
+
+    [history enumerateObjectsUsingBlock:^(NSData * encryptedData, NSUInteger idx, BOOL * stop) {
+        NSError * error = nil;
+        NSData * decryptedMessage = [self.secureStorageEnryptor unwrapData:encryptedData
+                                                 context:nil
+                                                   error:&error];
+
+        if (error) {
+            NSLog(@"Error on decrypting message %@", error);
+        } else {
+            NSString * resultString = [[NSString alloc] initWithData:decryptedMessage
+                                                            encoding:NSUTF8StringEncoding];
+            NSLog(@"Message decrypted:\n-- %@", resultString);
+        }
+    }];
+    NSLog(@"End of history\n\n");
+}
+
+
+- (void)createSecureStorage {
+    // create encryptor if there's no
+    if (!self.secureStorageEnryptor) {
+
+        // you should NEVER use uuid as encryption key ;)
+        NSString * encryptionKey = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        self.secureStorageEnryptor = [[TSCellSeal alloc] initWithKey:[encryptionKey dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+}
 
 #pragma mark - UITextField delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-  [self sendMessage:nil];
-  return YES;
+    [self sendMessage:nil];
+    return YES;
 }
 
 @end

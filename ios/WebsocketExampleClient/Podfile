@@ -1,4 +1,6 @@
 platform :ios, "7.0"
 
 pod "SocketRocket"
-pod "themis"
+
+# use head
+pod "themis", :git => 'https://github.com/cossacklabs/themis.git'
