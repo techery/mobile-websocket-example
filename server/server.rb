@@ -35,7 +35,7 @@ EventMachine.run do
 	    stage+=1
 	else
 	    res, mes = $sessions[id].unwrap(Base64.decode64(msg))
-	    if res == 1 #Themis::SAND_AS_IS
+	    if res == 1 #Themis::SEND_AS_IS
 		ws.send(Base64.encode64(mes))
 	    else
 		$sessions.each do |sid, session|
