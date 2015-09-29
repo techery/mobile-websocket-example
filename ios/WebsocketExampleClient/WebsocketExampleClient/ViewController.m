@@ -194,6 +194,8 @@ NSString * const kHistoryStoringKey = @"kHistoryStoringKey";
     NSString * wrappedStringMessage = [wrappedData base64EncodedStringWithOptions:0];
     [self loggingEvent:@"sending message..."];
     [self.webSocket send:wrappedStringMessage];
+    
+    self.messageTextField.text = nil;
 }
 
 
