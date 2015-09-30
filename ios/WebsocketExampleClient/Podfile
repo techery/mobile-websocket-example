@@ -1,6 +1,6 @@
 platform :ios, "7.0"
 
-pod "SocketRocket"
+pod "SocketRocket", '0.4'
 
-# use head
-pod "themis", :git => 'https://github.com/cossacklabs/themis.git'
+# should be 0.9.2 release as soon as it will be ready
+pod "themis", :git => 'https://github.com/cossacklabs/themis.git', :commit => 'b6e8e4d479d2fa6118423059021d864f1ef763e2'
