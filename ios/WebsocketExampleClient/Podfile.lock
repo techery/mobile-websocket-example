@@ -12,16 +12,17 @@ PODS:
     - themis/core
 
 DEPENDENCIES:
-  - SocketRocket
-  - themis (from `https://github.com/cossacklabs/themis.git`)
+  - SocketRocket (= 0.4)
+  - themis (from `https://github.com/cossacklabs/themis.git`, commit `b6e8e4d479d2fa6118423059021d864f1ef763e2`)
 
 EXTERNAL SOURCES:
   themis:
+    :commit: b6e8e4d479d2fa6118423059021d864f1ef763e2
     :git: https://github.com/cossacklabs/themis.git
 
 CHECKOUT OPTIONS:
   themis:
-    :commit: a5968fcbb0353046cb155787762472bcbaba4118
+    :commit: b6e8e4d479d2fa6118423059021d864f1ef763e2
     :git: https://github.com/cossacklabs/themis.git
 
 SPEC CHECKSUMS:
