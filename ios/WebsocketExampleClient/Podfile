@@ -1,6 +1,8 @@
 platform :ios, "7.0"
 
+inhibit_all_warnings!
+
 pod "SocketRocket", '0.4'
 
 # should be 0.9.2 release as soon as it will be ready
-pod "themis", :git => 'https://github.com/cossacklabs/themis.git', :commit => 'b6e8e4d479d2fa6118423059021d864f1ef763e2'
+pod "themis", :git => 'https://github.com/cossacklabs/themis.git', :commit => '43f7e4557616e19e00a2be20302b1c2210da4277'
