@@ -140,7 +140,8 @@ NSString * const kHistoryStoringKey = @"kHistoryStoringKey";
 
     NSError * error = nil;
 
-    NSData * receivedData = [[NSData alloc] initWithBase64EncodedString:message options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData * receivedData = [[NSData alloc] initWithBase64EncodedString:message
+                                                                options:NSDataBase64DecodingIgnoreUnknownCharacters];
     NSData * unwrappedMessage = [self.session unwrapData:receivedData error:&error];
 
     if (error) {
