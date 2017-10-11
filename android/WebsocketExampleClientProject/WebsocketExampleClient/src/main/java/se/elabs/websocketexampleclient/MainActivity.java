@@ -156,7 +156,10 @@ public class MainActivity extends Activity {
     private void connectWebSocket() {
         URI uri;
         try {
-            uri = new URI("ws://104.131.45.163:8080");
+            // important: 127.0.0.1 doesn't work
+            // use your own IP address
+            // https://stackoverflow.com/questions/18979546/connection-refused-in-android-client
+            uri = new URI("ws://10.10.1.38:8080");
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return;
