@@ -5,7 +5,7 @@
 
 #import <UIKit/UIKit.h>
 #import <SocketRocket/SRWebSocket.h>
-#import "objcthemis/ssession.h"
+#import <objcthemis/objcthemis.h>
 
 
 @class TSCellSeal;
