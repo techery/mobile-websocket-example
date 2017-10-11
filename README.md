@@ -26,7 +26,7 @@ Open `xcworkspace`, build and run project to start chatting. Don't forget to sta
 
 Or follow [long guide](/ios/WebsocketExampleClient).
 
-iOS client is written in Obj-C. Supports iOS7-9, Xcode6-7. 
+iOS client is written in Obj-C. Supports iOS8-10, Xcode9. 
 
 <img src="/ios/WebsocketExampleClient/pic/socket-example.png" width="400" />
 

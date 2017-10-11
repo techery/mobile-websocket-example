@@ -4,8 +4,7 @@
 //
 //
 
-#import <themis/objcthemis/scell_seal.h>
-#import <themis/objcthemis/skeygen.h>
+#import <objcthemis/objcthemis.h>
 #import "ViewController.h"
 
 

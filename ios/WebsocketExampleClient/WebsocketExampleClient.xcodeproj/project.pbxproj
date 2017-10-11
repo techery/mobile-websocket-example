@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8BA05C76E30C4746B3250FA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F118D0AE684CEB8C16446E /* libPods.a */; };
+		B8DA325013B4C732582FF78B /* libPods-WebsocketExampleClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5317A60B2388C72E7A7CF9F1 /* libPods-WebsocketExampleClient.a */; };
 		D776730418A93AD500F0D623 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D776730318A93AD500F0D623 /* Foundation.framework */; };
 		D776730618A93AD500F0D623 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D776730518A93AD500F0D623 /* CoreGraphics.framework */; };
 		D776730818A93AD500F0D623 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D776730718A93AD500F0D623 /* UIKit.framework */; };
@@ -35,8 +35,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		7410F0E23516DD2533E0295E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		A1F118D0AE684CEB8C16446E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5317A60B2388C72E7A7CF9F1 /* libPods-WebsocketExampleClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WebsocketExampleClient.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8767A5C992811AEE3007AEC4 /* Pods-WebsocketExampleClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebsocketExampleClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-WebsocketExampleClient/Pods-WebsocketExampleClient.release.xcconfig"; sourceTree = "<group>"; };
 		D776730018A93AD500F0D623 /* WebsocketExampleClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebsocketExampleClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D776730318A93AD500F0D623 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D776730518A93AD500F0D623 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -56,7 +56,7 @@
 		D776732D18A93AD600F0D623 /* WebsocketExampleClientTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WebsocketExampleClientTests-Info.plist"; sourceTree = "<group>"; };
 		D776732F18A93AD600F0D623 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D776733118A93AD600F0D623 /* WebsocketExampleClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebsocketExampleClientTests.m; sourceTree = "<group>"; };
-		EC10D152E47B984194856864 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		E9507E73A73F29EAB7533E97 /* Pods-WebsocketExampleClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebsocketExampleClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WebsocketExampleClient/Pods-WebsocketExampleClient.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,7 +67,7 @@
 				D776730618A93AD500F0D623 /* CoreGraphics.framework in Frameworks */,
 				D776730818A93AD500F0D623 /* UIKit.framework in Frameworks */,
 				D776730418A93AD500F0D623 /* Foundation.framework in Frameworks */,
-				8BA05C76E30C4746B3250FA2 /* libPods.a in Frameworks */,
+				B8DA325013B4C732582FF78B /* libPods-WebsocketExampleClient.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,11 +84,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6EB3E96783A38D7508AA106C /* Pods */ = {
+		34C7762B6269AFE2AA2CD1D2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				EC10D152E47B984194856864 /* Pods.debug.xcconfig */,
-				7410F0E23516DD2533E0295E /* Pods.release.xcconfig */,
+				E9507E73A73F29EAB7533E97 /* Pods-WebsocketExampleClient.debug.xcconfig */,
+				8767A5C992811AEE3007AEC4 /* Pods-WebsocketExampleClient.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -100,7 +100,7 @@
 				D776732B18A93AD600F0D623 /* WebsocketExampleClientTests */,
 				D776730218A93AD500F0D623 /* Frameworks */,
 				D776730118A93AD500F0D623 /* Products */,
-				6EB3E96783A38D7508AA106C /* Pods */,
+				34C7762B6269AFE2AA2CD1D2 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -120,7 +120,7 @@
 				D776730518A93AD500F0D623 /* CoreGraphics.framework */,
 				D776730718A93AD500F0D623 /* UIKit.framework */,
 				D776732518A93AD600F0D623 /* XCTest.framework */,
-				A1F118D0AE684CEB8C16446E /* libPods.a */,
+				5317A60B2388C72E7A7CF9F1 /* libPods-WebsocketExampleClient.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -175,12 +175,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D776733518A93AD600F0D623 /* Build configuration list for PBXNativeTarget "WebsocketExampleClient" */;
 			buildPhases = (
-				DCE8B3AA9A5249C4A880326D /* Check Pods Manifest.lock */,
+				56E8C0B355D3F1F088984597 /* [CP] Check Pods Manifest.lock */,
 				D77672FC18A93AD500F0D623 /* Sources */,
 				D77672FD18A93AD500F0D623 /* Frameworks */,
 				D77672FE18A93AD500F0D623 /* Resources */,
-				D7AC82CEFCB34FE2A3A9E23A /* Copy Pods Resources */,
-				D56BEE9ED63975B3B237E2CD /* Embed Pods Frameworks */,
+				847C4F0FDBB41D34A5613AF0 /* [CP] Embed Pods Frameworks */,
+				3159F59769A6BE64395EFBF5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -218,6 +218,9 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Elabs;
 				TargetAttributes = {
+					D77672FF18A93AD500F0D623 = {
+						ProvisioningStyle = Manual;
+					};
 					D776732318A93AD600F0D623 = {
 						TestTargetID = D77672FF18A93AD500F0D623;
 					};
@@ -264,49 +267,55 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		D56BEE9ED63975B3B237E2CD /* Embed Pods Frameworks */ = {
+		3159F59769A6BE64395EFBF5 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WebsocketExampleClient/Pods-WebsocketExampleClient-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D7AC82CEFCB34FE2A3A9E23A /* Copy Pods Resources */ = {
+		56E8C0B355D3F1F088984597 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WebsocketExampleClient-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DCE8B3AA9A5249C4A880326D /* Check Pods Manifest.lock */ = {
+		847C4F0FDBB41D34A5613AF0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-WebsocketExampleClient/Pods-WebsocketExampleClient-frameworks.sh",
+				"${PODS_ROOT}/GRKOpenSSLFramework/OpenSSL-iOS/bin/openssl.framework",
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WebsocketExampleClient/Pods-WebsocketExampleClient-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -443,17 +452,20 @@
 		};
 		D776733618A93AD600F0D623 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EC10D152E47B984194856864 /* Pods.debug.xcconfig */;
+			baseConfigurationReference = E9507E73A73F29EAB7533E97 /* Pods-WebsocketExampleClient.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = BrandAsset;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WebsocketExampleClient/WebsocketExampleClient-Prefix.pch";
 				INFOPLIST_FILE = "WebsocketExampleClient/WebsocketExampleClient-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "se.elabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -461,17 +473,20 @@
 		};
 		D776733718A93AD600F0D623 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7410F0E23516DD2533E0295E /* Pods.release.xcconfig */;
+			baseConfigurationReference = 8767A5C992811AEE3007AEC4 /* Pods-WebsocketExampleClient.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = BrandAsset;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WebsocketExampleClient/WebsocketExampleClient-Prefix.pch";
 				INFOPLIST_FILE = "WebsocketExampleClient/WebsocketExampleClient-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "se.elabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
