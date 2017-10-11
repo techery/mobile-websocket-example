@@ -36,10 +36,10 @@ EventMachine.run do
 	else
 	    res, mes = $sessions[id].unwrap(Base64.decode64(msg))
 	    if res == 1 #Themis::SEND_AS_IS
-		ws.send(Base64.encode64(mes))
+            ws.send(Base64.encode64(mes))
 	    else
 		$sessions.each do |sid, session|
-		    @channel.push(Base64.encode64($sessions[id].wrap(mes)))
+            @channel.push(Base64.encode64($sessions[id].wrap("-> " + mes)))
 		end
 	    end
 	end
