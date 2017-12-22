@@ -13,10 +13,10 @@ class CallbacksForThemis < Themis::Callbacks
   end
 end
 
-EventMachine.run do
+EM.run do
   @channel = EM::Channel.new
 
-  EventMachine::WebSocket.start(host: '0.0.0.0', port: 8080, debug: true) do |ws|
+  EM::WebSocket.run(host: '0.0.0.0', port: 8080, debug: true) do |ws|
     ws.onopen do
       stage = 0
       id = nil
