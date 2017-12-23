@@ -8,6 +8,6 @@ inhibit_all_warnings!
 target :"WebsocketExampleClient" do
 
   pod "SocketRocket", '0.5.1'
-  pod 'themis', '0.9.5'
+  pod 'themis', '0.9.6'
 
 end

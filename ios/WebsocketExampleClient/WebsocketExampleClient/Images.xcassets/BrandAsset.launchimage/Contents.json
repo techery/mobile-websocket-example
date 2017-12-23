@@ -30,29 +30,6 @@
       "minimum-system-version" : "7.0",
       "subtype" : "retina4",
       "scale" : "2x"
-    },
-    {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
-      "minimum-system-version" : "7.0",
-      "scale" : "2x"
-    },
-    {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
-      "minimum-system-version" : "7.0",
-      "subtype" : "retina4",
-      "scale" : "2x"
-    },
-    {
-      "extent" : "full-screen",
-      "idiom" : "iphone",
-      "subtype" : "667h",
-      "filename" : "Untitled-1.png",
-      "minimum-system-version" : "8.0",
-      "orientation" : "portrait",
-      "unassigned" : true,
-      "scale" : "2x"
     }
   ],
   "info" : {
